@@ -46,41 +46,28 @@ var saveTasks = function() {
 
 
 $(".list-group").on("click", "p", function() {
-  var text = $(this)
-    .text()
-    .trim();
-  var textInput = $("<textarea>")
-  .addClass("form-control")
-  .val(text);
+  var text = $(this).text().trim();
+  var textInput = $("<textarea>").addClass("form-control").val(text);
   $(this).replaceWith(textInput);
   textInput.trigger("focus");
 });
 
 $(".list-group").on("blur", "textarea", function() {
   // get the textarea's current value/text
-var text = $(this)
-.val()
-.trim();
+var text = $(this).val().trim();
 
 // get the parent ul's id attribute
-var status = $(this)
-.closest(".list-group")
-.attr("id")
-.replace("list-", "");
+var status = $(this).closest(".list-group").attr("id").replace("list-", "");
 
 // get the task's position in the list of other li elements
-var index = $(this)
-.closest(".list-group-item")
-.index();
+var index = $(this).closest(".list-group-item").index();
 
 // save to localStorage API
 tasks[status][index].text = text;
 saveTasks();
 
 // recreate p element
-var taskP = $("<p>")
-  .addClass("m-1")
-  .text(text);
+var taskP = $("<p>").addClass("m-1").text(text);
 
 // replace textarea with p element
 $(this).replaceWith(taskP);
@@ -97,7 +84,7 @@ $(".list-group").on("click", "span", function() {
   $(this).replaceWith(dateInput);
 
   // enable jquery ui datepicker
-dateInput.datepicker({
+  dateInput.datepicker({
   minDate: 1,
   onClose: function() {
     // when calendar is closed, force a "change" event on the `dateInput`
@@ -108,29 +95,20 @@ dateInput.datepicker({
 // value of due date was changed
 $(".list-group").on("change", "input[type='text']", function() {
   // get current text
-  var date = $(this)
-    .val()
-    .trim();
+  var date = $(this).val().trim();
 
   // get the parent ul's id attribute
-  var status = $(this)
-    .closest(".list-group")
-    .attr("id")
-    .replace("list-", "");
+  var status = $(this).closest(".list-group").attr("id").replace("list-", "");
 
   // get the task's position in the list of other li elements
-  var index = $(this)
-    .closest(".list-group-item")
-    .index();
+  var index = $(this).closest(".list-group-item").index();
 
   // update task in array and re-save to localstorage
   tasks[status][index].date = date;
   saveTasks();
 
   // recreate span element with bootstrap classes
-  var taskSpan = $("<span>")
-    .addClass("badge badge-primary badge-pill")
-    .text(date);
+  var taskSpan = $("<span>").addClass("badge badge-primary badge-pill").text(date);
 
   // replace input with span element
   $(this).replaceWith(taskSpan);
@@ -152,7 +130,7 @@ $("#task-form-modal").on("shown.bs.modal", function() {
 });
 
 // save button in modal was clicked
-$("#task-form-modal .btn-primary").click(function() {
+$("#task-form-modal .btn-save").click(function() {
   // get form values
   var taskText = $("#modalTaskDescription").val();
   var taskDate = $("#modalDueDate").val();
@@ -183,21 +161,23 @@ $("#remove-tasks").on("click", function() {
 });
 
 // Make the tasks draggable
-$(".card .list-group").sortable({
-  connectWith: $(".card .list-group"),
-  scroll: false,
-  tolerance: "pointer",
-  helper: "clone",
+$(".card .list-group").sortable({connectWith: $(".card .list-group"), scroll: false, tolerance: "pointer", helper: "clone",
   activate: function(event) {
-    console.log("activate", this);
+  $(this).addClass("dropover"),
+  $("bottom-trash").addClass("bottom-trash-drag"),
+  console.log("activate", this)
   },
   deactivate: function(event) {
+    $(this).removeClass("dropover"),
+    $("bottom-trash").removeClass("bottom-trash-drag"),
     console.log("deactivate", this);
   },
   over: function(event) {
+    $(this).event.target.addClass("dropover-active"),
     console.log("over", event.target);
   },
   out: function(event) {
+    $(this).event.target.removeClass("dropover-active"),
     console.log("out", event.target);
   },
   update: function(event) {
@@ -206,15 +186,9 @@ $(".card .list-group").sortable({
 
 // loop over current set of children in sortable list
 $(this).children().each(function() {
-  var text = $(this)
-    .find("p")
-    .text()
-    .trim();
+  var text = $(this).find("p").text().trim();
 
-  var date = $(this)
-    .find("span")
-    .text()
-    .trim();
+  var date = $(this).find("span").text().trim();
 
   // add task data to the temp array as an object
   tempArr.push({
@@ -223,9 +197,7 @@ $(this).children().each(function() {
   });
 });
 // trim down list's ID to match object property
-var arrName = $(this)
-  .attr("id")
-  .replace("list-", "");
+var arrName = $(this).attr("id").replace("list-", "");
 
 // update array on tasks object and save
 tasks[arrName] = tempArr;
@@ -241,13 +213,16 @@ $("#trash").droppable({
   accept: ".card .list-group-item",
   tolerance: "touch",
   drop: function(event, ui) {
+    $("bottom-trash").removeClass("bottom-trash-active"),
     console.log("drop");
     ui.draggable.remove();
   },
   over: function(event, ui) {
+    $("bottom-trash").addClass("bottom-trash-active"),
     console.log("over");
   },
   out: function(event, ui) {
+    $("bottom-trash").removeClass("bottom-trash-active"),
     console.log("out");
   }
 });
@@ -277,9 +252,17 @@ var auditTask = function(taskEl) {
   else if (Math.abs(moment().diff(time, "days")) <= 2) {
     $(taskEl).addClass("list-group-item-warning");
   }
+  
 };
+
+
 
 // load tasks for the first time
 loadTasks();
 
-
+// audit the tasks in the background using an interval that will run repeatedly
+setInterval(function () {
+  $(".card .list-group-item").each(function(index, el) {
+    auditTask(el);
+  });
+}, (1000 * 60) * 30);

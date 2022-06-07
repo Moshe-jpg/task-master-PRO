@@ -6,29 +6,33 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <!-- add the style sheet here -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
+    <!-- google fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&family=Staatliches&display=swap" rel="stylesheet">
+    <!-- bootstrap icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.3/font/bootstrap-icons.min.css" integrity="sha512-YzwGgFdO1NQw1CZkPoGyRkEnUTxPSbGWXvGiXrWk8IeSqdyci0dEDYdLLjMxq1zCoU0QBa4kHAFiRhUL3z2bow==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- css styles -->
     <link rel="stylesheet" href="style.css" />
+    <!-- icon -->
     <link rel="icon" href="images\clipboard.png">
     <title>Taskmaster Pro</title>
   </head>
 
   <body>
     <div class="row min-vh-100 no-gutters">
-      <header
-        class="col-12 col-lg-3 bg-dark text-light sticky-top d-flex flex-column p-4 p-lg-3"
-      >
-        <h1 class="text-center">Taskmaster Pro Edition</h1>
-        <button
-          id="create-task"
-          class="btn btn-block btn-success"
-          data-toggle="modal"
-          data-target="#task-form-modal"
-        >
-          Add Task
+      <header class="col-12 col-lg-3 bg-dark text-light sticky-top d-flex flex-column p-4 p-lg-3">
+        <h1 class="text-center"><i class="bi bi-list-task d-inline d-lg-none"></i> Taskmaster Pro Edition</h1>
+        <button id="create-task" class="btn btn-block btn-add" data-toggle="modal" data-target="#task-form-modal">
+          <i class="bi bi-plus-circle mr-2"></i>Add Task
         </button>
-        <button id="remove-tasks" class="btn btn-block btn-danger">
-          Delete All Tasks
+        <button id="remove-tasks" class="btn btn-block btn-delete">
+          <i class="bi bi-trash3 mr-2"></i> Delete All Tasks
         </button>
-        <p class="mt-auto d-none d-lg-block">
+
+        <i class="bi bi-list-task display-1 text-center mb-2 d-none d-lg-block mt-auto"></i>
+
+        <p class="d-none d-lg-block">
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Modi voluptas
           architecto ipsa excepturi aut non laudantium sequi fugit officiis
           optio deleniti asperiores rem eius laborum maxime blanditiis culpa,
@@ -91,9 +95,9 @@
           <!-- done end -->
         </div>
         <!-- trash zone -->
-        <div id="trash" class="mt-auto">
-          <div class="w-100 bg-danger p-3 text-center text-light display-4">
-            Drop Here to Remove.
+        <div id="trash" class="mt-auto overflow-hidden">
+          <div class="w-100 p-3 text-center bottom-trash">
+            <i class="bi bi-trash3 mx-auto mb-4"></i>Drop Here to Remove.
           </div>
         </div>
       </main>
@@ -140,14 +144,10 @@
             </form>
           </div>
           <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              data-dismiss="modal"
-            >
+            <button type="button" class="btn btn-close" data-dismiss="modal">
               Close
             </button>
-            <button type="button" class="btn btn-primary">Save Task</button>
+            <button type="button" class="btn btn-save">Save Task</button>
           </div>
         </div>
       </div>
